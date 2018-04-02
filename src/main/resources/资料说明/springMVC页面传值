@@ -1,0 +1,70 @@
+<form action="/xxx" name="user" method="POST">
+
+name:<input name="name" type="text" placeholder="用户名"><br/>
+
+pwd:<input name="pwd" type="password" placeholder="用户名"><br/>
+
+
+</form>
+
+页面上是这么写滴。。。
+
+那后台Controller该怎么去取值呢？Look下面：
+
+@RequestMapping(value = "/xxx", method = RequestMethod.POST)
+public String login(@ModelAttribute("user") User user, HttpSession session) {
+
+String name =  user.getName();
+
+String pwd = user.getPwd();
+
+boolean isSuccess = userService.findUserByNameAndPwd(name,pwd);
+
+if(isSuccess){
+
+return "redirect:/success";
+
+}
+
+return "/login";
+}
+
+
+是否有注意，Controller方法参数中的user在方法体中是直接拿来使用的，但这个user的值是从哪里来的呢，其实就是从页面获取到的，
+
+页面form表单的名字叫user，然后这个form表单是请求的xxx，也就是login方法，这样说可能应该有感觉了吧，要注意的是，Controller方法
+
+参数中的user必须给它加上@ModelAttribute("user")这样的一个注解。在看下面：
+
+
+public String login(@ModelAttribute("user") User user, HttpSession session) {...}
+
+
+<form action="/xxx" name="user" method="POST">
+
+...
+
+</form>
+
+这样一对比，是不是清楚了。
+
+这是传递一个实例，但如果值传递一个或多个零散的参数呢？好的，继续Look下面：
+
+<a href="/manager/delete?id=1">删除</a>
+
+怎么在Controller中获取a标签中所传递的参数呢？就是像这样：
+
+@RequestMapping(value = "/manager/delete", method = RequestMethod.GET)
+
+public String delete(@RequestParam("id") long id){
+
+delete(id);
+
+}
+
+就是直接使用注解@RequestParam("id")来获取页面上传过来id的值。
+
+
+public String delete(@RequestParam("id") long id){...}
+
+<a href="/manager/delete?id=1">删除</a>

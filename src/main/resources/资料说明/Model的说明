@@ -1,0 +1,20 @@
+@RequestMapping("/test")
+2 public String test(Map<String,Object> map,Model model,ModelMap modelMap){
+3 
+4     map.put("names", Arrays.asList("caoyc","zhh","cjx"));
+5     model.addAttribute("time", new Date());
+6     modelMap.addAttribute("city", "ChengDu");
+7     modelMap.put("gender", "male");
+8     return "hello";
+9 }
+
+　　
+
+JSP页面
+
+ 
+
+1 1、time:${requestScope.time}
+2 <br/>2、names:${requestScope.names }
+3 <br/>3、city:${requestScope.city }
+4 <br/>4、gender:${requestScope.gender }
